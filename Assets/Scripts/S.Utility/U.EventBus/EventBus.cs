@@ -33,9 +33,11 @@ namespace S.Utility.U.EventBus
             var type = typeof(T);
             if(_subscribers.ContainsKey(type))
             {
-                foreach(var callback in _subscribers[type])
+                var subscribersCopy = new List<Delegate>(_subscribers[type]);
+
+                foreach (var callback in subscribersCopy)
                 {
-                    ((Action<T>)callback)?.Invoke(eventData);      
+                    ((Action<T>)callback)?.Invoke(eventData);
                 }
             }
         }
