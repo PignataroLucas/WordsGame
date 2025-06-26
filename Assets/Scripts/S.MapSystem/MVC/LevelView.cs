@@ -1,6 +1,5 @@
 using S.ScriptableObjects;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace S.MapSystem.MVC
 {

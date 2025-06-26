@@ -1,29 +1,35 @@
 using S.Events.E.Transitions;
-using Tests;
+using S.Utility.U.EventBus;
+using S.Utility.U.ServiceLocator;
 using UnityEngine;
 
 namespace S.MapSystem.MVC
 {
     public class LevelController
     {
-        private LevelModel _levelModel;
+        private readonly LevelView _levelView;
 
-        public LevelController()
+        public LevelController(LevelView levelView)
         {
-            _levelModel = new LevelModel();
+            _levelView = levelView;
+            SubscribeToEvents();
+        }
 
-            if(_levelModel == null)
+        private void SubscribeToEvents()
+        {
+            Services.WaitFor<IEventBus>(eventBus =>
             {
-                Debug.LogError($"level model null");
-            }
-            
-            EventBusContainer.Global.Subscribe<TestLevelEvent>(OnTestLevelEvent);
+                eventBus.Subscribe<TestLevelEvent>(OnTestLevelEvent);
+            });
         }
 
         private void OnTestLevelEvent(TestLevelEvent evt)
         {
-            _levelModel.LevelView.SetData(evt.LevelData);
-            EventBusContainer.Global.Unsubscribe<TestLevelEvent>(OnTestLevelEvent);
+            if(_levelView != null)
+            { 
+                _levelView.SetData(evt.LevelData);
+            }
+            //EventBusContainer.Global.Unsubscribe<TestLevelEvent>(OnTestLevelEvent);
         }
     }
 }

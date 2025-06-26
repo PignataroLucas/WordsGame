@@ -1,6 +1,8 @@
 using System;
 using S.Events.E.Transitions;
 using S.ScriptableObjects;
+using S.Utility.U.EventBus;
+using S.Utility.U.ServiceLocator;
 using Tests;
 using TMPro;
 using UnityEngine;
@@ -14,8 +16,15 @@ namespace S.MainMenu.MM.MVC
         [SerializeField] private TextMeshProUGUI _label;
         [SerializeField] private UserStateData _userStateData;
         [SerializeField] private LevelDatabase _levelDatabase;
+        private IEventBus _eventBus;
+
 
         private LevelData _currentLevelData;
+
+        private void Awake()
+        {
+            Services.WaitFor<IEventBus>(bus => _eventBus = bus);
+        }
 
         private void Start()
         {
@@ -26,7 +35,7 @@ namespace S.MainMenu.MM.MVC
 
             _playButton.onClick.AddListener(() =>
             {
-                EventBusContainer.Global.Publish(new TestLevelEvent("Jugar nivel actual", _currentLevelData));
+                _eventBus.Publish(new TestLevelEvent("Jugar nivel actual", _currentLevelData));
             });
             
         }
