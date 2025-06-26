@@ -221,6 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6111954275427035690}
   - component: {fileID: 2239846234896715495}
+  - component: {fileID: 9090500416769878417}
   m_Layer: 5
   m_Name: LetterCellView
   m_TagString: Untagged
@@ -262,3 +263,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _letterText: {fileID: 6619186766563824841}
+--- !u!225 &9090500416769878417
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7171164037117997724}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
