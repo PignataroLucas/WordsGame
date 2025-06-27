@@ -4,12 +4,13 @@ using S.MainMenu.MM.MVC;
 using S.ScriptableObjects;
 using Tests;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace S.MapSystem.MVC
 {
     public class LevelView : MonoBehaviour
     {
-        [SerializeField] private GameObject _background;
+        [SerializeField] private Image _background;
         [SerializeField] private MainMenuView _mainMenuView;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private WordGridView _wordGridView;
@@ -19,8 +20,21 @@ namespace S.MapSystem.MVC
         
         public void SetData(LevelData evtLevelData)
         {
+            
             Debug.Log($"[LevelController] Level Data information : {evtLevelData.LevelId}");
 
+            string path = $"R.Images/I.Backgrounds/B.Levels/background_level_{evtLevelData.LevelId}";
+            Sprite bgSprite = Resources.Load<Sprite>(path);
+
+            if(bgSprite != null)
+            {
+                _background.sprite = bgSprite;
+            }
+            else
+            {
+                Debug.LogWarning($"[LevelView] Background image not found at path: {path}");
+            }
+            
             _wordGridController.SetLevelWords(evtLevelData.WordList);
 
             _wordGridView.BuildGrid(
