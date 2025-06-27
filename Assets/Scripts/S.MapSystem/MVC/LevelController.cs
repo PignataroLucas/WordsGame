@@ -21,7 +21,6 @@ namespace S.MapSystem.MVC
             {
                 eventBus.Subscribe<TestLevelEvent>(OnTestLevelEvent);
                 eventBus.Subscribe<LevelCompletedEvent>(OnLevelCompleted);
-
             });
         }
 

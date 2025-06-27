@@ -19,13 +19,9 @@ namespace Tests
         private List<string> _validWords;
         private List<string> _remainingWords;
 
-        private string _testWordValid = "cats";   
-        private string _testWordInvalid = "dogs"; 
-
-        // public void SetLevelWords(List<string> wordList)
-        // {
-        //     _validWords = wordList;
-        // }
+        private const string _testWordInvalid = "dogs"; 
+        
+        private bool _isCompleted;
         
         public void SetLevelWords(List<string> wordList)
         {
@@ -35,16 +31,6 @@ namespace Tests
 
         private void Update()
         {
-            // if(Keyboard.current.aKey.wasPressedThisFrame)
-            // { 
-            //     TrySubmitWord(_testWordValid);
-            // }
-            //
-            // if(Keyboard.current.bKey.wasPressedThisFrame)
-            // { 
-            //     TrySubmitWord(_testWordInvalid);
-            // }
-            
             if(Keyboard.current.aKey.wasPressedThisFrame)
             {
                 SubmitRandomWord();
@@ -61,7 +47,6 @@ namespace Tests
             if(_validWords.Contains(word))
             {
                 _wordGridView.ClearPrevious();     
-                //_wordGridView.FillNextEmpty(word); 
                 AnimateWordPlacement(word);
             }
             else
@@ -72,9 +57,14 @@ namespace Tests
         
         private void SubmitRandomWord()
         {
-            if (_remainingWords.Count == 0)
+            if(_isCompleted)
             {
-                Debug.Log("[WordGridController] No hay más palabras por completar.");
+                return;
+            }
+
+            if(_remainingWords.Count == 0)
+            {
+                _isCompleted = true;
                 return;
             }
 
@@ -82,36 +72,26 @@ namespace Tests
             string randomWord = _remainingWords[index];
 
             AnimateWordPlacement(randomWord);
-
-            _remainingWords.RemoveAt(index);
-
-            if (_remainingWords.Count == 0 && _wordGridView.IsGridComplete())
-            {
-                Services.WaitFor<IEventBus>(bus =>
-                {
-                    bus.Publish(new LevelCompletedEvent());
-                });
-            }
         }
         
         private void AnimateWordPlacement(string word)
         {
-            Debug.Log($"Animating word: {word}");
+            var targetRow = _wordGridView.GetRowForWord(word);
 
-            var targetRow = _wordGridView.GetNextEmptyRow(word.Length);
-
-            if (targetRow == null)
+            if (targetRow == null || !targetRow.IsEmpty)
             {
-                Debug.LogWarning("[WordGridController] No empty row found for this word length!");
+                Debug.LogWarning($"[WordGridController] Cant place the word : {word}: row occupy or non-existent.");
                 return;
             }
 
             var targetCells = targetRow.GetCells();
 
-            float delayPerLetter = 0.1f;
-            float accumulatedDelay = 0f;
+            var delayPerLetter = 0.1f;
+            var accumulatedDelay = 0f;
+            var lettersCompleted = 0;
+            var wordLength = word.Length;
 
-            for (int i = 0; i < word.Length; i++)
+            for(int i = 0; i < wordLength; i++)
             {
                 char letter = word[i];
                 var targetCell = targetCells[i];
@@ -126,12 +106,30 @@ namespace Tests
                     () =>
                     {
                         targetCell.RevealLetter(letter);
+
+                        lettersCompleted++;
+
+                        if(lettersCompleted == wordLength)
+                        {
+                            Debug.Log($"Word '{word}' fully placed!");
+
+                            targetRow.SetWord(word);
+                            _remainingWords.Remove(word);
+                            
+                            CheckIfUserHasCompletedTheGrid();
+                        }
                     }
                 );
-
                 accumulatedDelay += delayPerLetter;
             }
         }
-        
+
+        private void CheckIfUserHasCompletedTheGrid()
+        {
+            if(_remainingWords.Count == 0 && _wordGridView.IsGridComplete())
+            {
+                Services.WaitFor<IEventBus>(bus => { bus.Publish(new LevelCompletedEvent()); });
+            }
+        }
     }
 }

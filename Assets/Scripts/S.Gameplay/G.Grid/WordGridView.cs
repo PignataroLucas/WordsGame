@@ -7,67 +7,40 @@ namespace S.Gameplay.G.Grid
     public class WordGridView : MonoBehaviour
     {
         [SerializeField] private Transform _gridParent;
+        
         private readonly List<WordRowView> _rows = new();
+        private readonly Dictionary<string, WordRowView> _wordToRowMap = new();
 
         public void BuildGrid(List<string> words, GameObject rowPrefab, GameObject cellPrefab)
         {
-            // foreach (var word in words)
-            // {
-            //     var rowObj = Instantiate(rowPrefab, _gridParent);
-            //     var row = rowObj.GetComponent<WordRowView>();
-            //
-            //     row.Initialize(word.Length, cellPrefab);
-            //     _rows.Add(row);
-            // }
-            // Limpiar grilla anterior
-            // foreach (Transform child in _gridParent)
-            // {
-            //     Destroy(child.gameObject);
-            // }
-            //
-            // float baseDelay = 0f;
-            // float delayIncrement = 0.05f;
-            //
-            // foreach (var word in words)
-            // {
-            //     var rowObj = Instantiate(rowPrefab, _gridParent);
-            //     var row = rowObj.GetComponent<WordRowView>();
-            //
-            //     row.Initialize(word.Length, cellPrefab);
-            //
-            //     var cells = rowObj.GetComponentsInChildren<LetterCellView>();
-            //
-            //     foreach (var cell in cells)
-            //     {
-            //         cell.PlayAppearAnimation(baseDelay);
-            //         baseDelay += delayIncrement;
-            //     }
-            // }
-            
-            foreach (Transform child in _gridParent)
-            {
+            foreach(Transform child in _gridParent)
+            { 
                 Destroy(child.gameObject);
             }
 
-            _rows.Clear(); 
+            _rows.Clear();
+            _wordToRowMap.Clear();
 
-            float baseDelay = 0f;
-            float delayIncrement = 0.05f;
+            words.Sort(CompareWords);
 
-            foreach (var word in words)
+            var baseDelay = 0f;
+            var delayIncrement = 0.05f;
+
+            foreach(var word in words)
             {
                 var rowObj = Instantiate(rowPrefab, _gridParent);
                 var row = rowObj.GetComponent<WordRowView>();
                 row.Initialize(word.Length, cellPrefab);
-                _rows.Add(row);
 
-                foreach (var cell in row.GetCells())
+                _rows.Add(row);
+                _wordToRowMap[word] = row;
+
+                foreach(var cell in row.GetCells())
                 {
                     cell.PlayAppearAnimation(baseDelay);
                     baseDelay += delayIncrement;
                 }
             }
-            
         }
 
         public void ClearPrevious()
@@ -77,18 +50,30 @@ namespace S.Gameplay.G.Grid
                 row.ClearRow();
             }
         }
-        
+
+        public bool IsGridComplete()
+        {
+            return _rows.All(row => row.IsCompleted);
+        }
+
+        private int CompareWords(string a, string b)
+        {
+            var lengthCompare = a.Length.CompareTo(b.Length);
+            if(lengthCompare != 0)
+            {
+                return lengthCompare;
+            }
+            
+            return string.Compare(a, b, System.StringComparison.Ordinal);
+        }
+
+        public WordRowView GetRowForWord(string word)
+        {
+            return _wordToRowMap.TryGetValue(word, out var row) ? row : null;
+        }
+
         public WordRowView GetNextEmptyRow(int wordLength)
         {
-            // foreach (var row in _rows)
-            // {
-            //     if (row.IsEmpty && row.MatchesLength(wordLength))
-            //     {
-            //         return row;
-            //     }
-            // }
-            // return null;
-            
             foreach (var row in _rows)
             {
                 if(row.IsEmpty && row.MatchesLength(wordLength))
@@ -97,11 +82,6 @@ namespace S.Gameplay.G.Grid
                 }
             }
             return null;
-        }
-        
-        public bool IsGridComplete()
-        {
-            return _rows.All(row => row.IsCompleted);
         }
 
         public void FillNextEmpty(string word)
