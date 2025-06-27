@@ -76,6 +76,18 @@ namespace S.Gameplay.G.Grid
                 row.ClearRow();
             }
         }
+        
+        public WordRowView GetNextEmptyRow(int wordLength)
+        {
+            foreach (var row in _rows)
+            {
+                if (row.IsEmpty && row.MatchesLength(wordLength))
+                {
+                    return row;
+                }
+            }
+            return null;
+        }
 
         public void FillNextEmpty(string word)
         {

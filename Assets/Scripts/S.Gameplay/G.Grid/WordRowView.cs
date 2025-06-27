@@ -45,5 +45,11 @@ namespace S.Gameplay.G.Grid
         {
             return _cells.Count == word.Length;
         }
+
+        public bool MatchesLength(int length)
+        {
+            return _cells.Count == length;
+        }
+        
     }
 }

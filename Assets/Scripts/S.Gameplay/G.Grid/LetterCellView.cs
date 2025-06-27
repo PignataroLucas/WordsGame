@@ -36,5 +36,20 @@ namespace S.Gameplay.G.Grid
             _canvasGroup.DOFade(1, 0.3f).SetDelay(delay);
             _rectTransform.DOScale(Vector3.one, 0.4f).SetEase(Ease.OutBack).SetDelay(delay);
         }
+
+        public void RevealLetter(char letter)
+        {
+            _letterText.text = letter.ToString();
+            _canvasGroup.alpha = 0;
+            transform.localScale = Vector3.zero;
+
+            _canvasGroup.DOFade(1f, 0.2f);
+            transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack);
+        }
+
+        public Vector3 GetWorldPosition()
+        {
+            return _rectTransform.position;
+        }
     }
 }
