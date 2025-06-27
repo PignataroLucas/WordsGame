@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace S.Gameplay.G.Grid
@@ -79,14 +80,28 @@ namespace S.Gameplay.G.Grid
         
         public WordRowView GetNextEmptyRow(int wordLength)
         {
+            // foreach (var row in _rows)
+            // {
+            //     if (row.IsEmpty && row.MatchesLength(wordLength))
+            //     {
+            //         return row;
+            //     }
+            // }
+            // return null;
+            
             foreach (var row in _rows)
             {
-                if (row.IsEmpty && row.MatchesLength(wordLength))
+                if(row.IsEmpty && row.MatchesLength(wordLength))
                 {
                     return row;
                 }
             }
             return null;
+        }
+        
+        public bool IsGridComplete()
+        {
+            return _rows.All(row => row.IsCompleted);
         }
 
         public void FillNextEmpty(string word)

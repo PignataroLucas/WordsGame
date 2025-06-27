@@ -20,7 +20,14 @@ namespace S.MapSystem.MVC
             Services.WaitFor<IEventBus>(eventBus =>
             {
                 eventBus.Subscribe<TestLevelEvent>(OnTestLevelEvent);
+                eventBus.Subscribe<LevelCompletedEvent>(OnLevelCompleted);
+
             });
+        }
+
+        private void OnLevelCompleted(LevelCompletedEvent obj)
+        {
+            Debug.Log("[LevelController] Level Completed!!");
         }
 
         private void OnTestLevelEvent(TestLevelEvent evt)

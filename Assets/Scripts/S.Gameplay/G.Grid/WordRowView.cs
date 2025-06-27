@@ -8,7 +8,12 @@ namespace S.Gameplay.G.Grid
     {
         private List<LetterCellView> _cells = new();
 
-        public bool IsEmpty => _cells.All(cell => string.IsNullOrEmpty(cell.Letter));
+        //public bool IsEmpty => _cells.All(cell => string.IsNullOrEmpty(cell.Letter));
+        public bool IsEmpty => !IsCompleted && _cells.All(cell => string.IsNullOrEmpty(cell.Letter));
+
+        
+        public bool IsCompleted { get; private set; }
+
 
         public void Initialize(int letterCount, GameObject cellPrefab)
         {
@@ -26,6 +31,7 @@ namespace S.Gameplay.G.Grid
             {
                 _cells[i].SetLetter(word[i]);
             }
+            IsCompleted = true;
         }
 
         public List<LetterCellView> GetCells()

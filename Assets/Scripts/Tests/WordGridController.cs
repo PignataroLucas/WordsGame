@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using S.Events.E.Transitions;
 using S.Gameplay.G.Grid;
 using S.Gameplay.G.Keyboard.K.Effects;
+using S.Utility.U.EventBus;
+using S.Utility.U.ServiceLocator;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,24 +17,41 @@ namespace Tests
         [SerializeField] private Transform _flyingLettersLayer;
         
         private List<string> _validWords;
+        private List<string> _remainingWords;
 
         private string _testWordValid = "cats";   
         private string _testWordInvalid = "dogs"; 
 
+        // public void SetLevelWords(List<string> wordList)
+        // {
+        //     _validWords = wordList;
+        // }
+        
         public void SetLevelWords(List<string> wordList)
         {
-            _validWords = wordList;
+            _validWords = new List<string>(wordList);
+            _remainingWords = new List<string>(wordList);
         }
 
         private void Update()
         {
+            // if(Keyboard.current.aKey.wasPressedThisFrame)
+            // { 
+            //     TrySubmitWord(_testWordValid);
+            // }
+            //
+            // if(Keyboard.current.bKey.wasPressedThisFrame)
+            // { 
+            //     TrySubmitWord(_testWordInvalid);
+            // }
+            
             if(Keyboard.current.aKey.wasPressedThisFrame)
-            { 
-                TrySubmitWord(_testWordValid);
+            {
+                SubmitRandomWord();
             }
 
             if(Keyboard.current.bKey.wasPressedThisFrame)
-            { 
+            {
                 TrySubmitWord(_testWordInvalid);
             }
         }
@@ -47,6 +67,30 @@ namespace Tests
             else
             {
                 Debug.Log($"❌ Wrong word : {word}");
+            }
+        }
+        
+        private void SubmitRandomWord()
+        {
+            if (_remainingWords.Count == 0)
+            {
+                Debug.Log("[WordGridController] No hay más palabras por completar.");
+                return;
+            }
+
+            int index = UnityEngine.Random.Range(0, _remainingWords.Count);
+            string randomWord = _remainingWords[index];
+
+            AnimateWordPlacement(randomWord);
+
+            _remainingWords.RemoveAt(index);
+
+            if (_remainingWords.Count == 0 && _wordGridView.IsGridComplete())
+            {
+                Services.WaitFor<IEventBus>(bus =>
+                {
+                    bus.Publish(new LevelCompletedEvent());
+                });
             }
         }
         
