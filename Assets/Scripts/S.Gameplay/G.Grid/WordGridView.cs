@@ -5,53 +5,102 @@ namespace S.Gameplay.G.Grid
 {
     public class WordGridView : MonoBehaviour
     {
-        [SerializeField] private WordRowView _wordRowPrefab;
-        [SerializeField] private LetterCellView _letterCellPrefab;
         [SerializeField] private Transform _gridParent;
+        private readonly List<WordRowView> _rows = new();
 
-        // public void BuildGrid(List<string> wordList)
-        // {
-        //     foreach (Transform child in _gridParent)
-        //     {
-        //         Destroy(child.gameObject);
-        //     }
-        //
-        //     foreach (var word in wordList)
-        //     {
-        //         var row = Instantiate(_wordRowPrefab, _gridParent);
-        //         foreach (var letter in word)
-        //         {
-        //             var cell = Instantiate(_letterCellPrefab);
-        //             cell.SetLetter(letter);
-        //             row.AddLetterCell(cell);
-        //         }
-        //     }
-        // }
-        
-        public void BuildGrid(List<string> wordList)
+        public void BuildGrid(List<string> words, GameObject rowPrefab, GameObject cellPrefab)
         {
+            // foreach (var word in words)
+            // {
+            //     var rowObj = Instantiate(rowPrefab, _gridParent);
+            //     var row = rowObj.GetComponent<WordRowView>();
+            //
+            //     row.Initialize(word.Length, cellPrefab);
+            //     _rows.Add(row);
+            // }
+            // Limpiar grilla anterior
+            // foreach (Transform child in _gridParent)
+            // {
+            //     Destroy(child.gameObject);
+            // }
+            //
+            // float baseDelay = 0f;
+            // float delayIncrement = 0.05f;
+            //
+            // foreach (var word in words)
+            // {
+            //     var rowObj = Instantiate(rowPrefab, _gridParent);
+            //     var row = rowObj.GetComponent<WordRowView>();
+            //
+            //     row.Initialize(word.Length, cellPrefab);
+            //
+            //     var cells = rowObj.GetComponentsInChildren<LetterCellView>();
+            //
+            //     foreach (var cell in cells)
+            //     {
+            //         cell.PlayAppearAnimation(baseDelay);
+            //         baseDelay += delayIncrement;
+            //     }
+            // }
+            
             foreach (Transform child in _gridParent)
             {
                 Destroy(child.gameObject);
             }
 
+            _rows.Clear(); 
+
             float baseDelay = 0f;
             float delayIncrement = 0.05f;
 
-            foreach (var word in wordList)
+            foreach (var word in words)
             {
-                var row = Instantiate(_wordRowPrefab, _gridParent);
+                var rowObj = Instantiate(rowPrefab, _gridParent);
+                var row = rowObj.GetComponent<WordRowView>();
+                row.Initialize(word.Length, cellPrefab);
+                _rows.Add(row);
 
-                foreach (var letter in word)
+                foreach (var cell in row.GetCells())
                 {
-                    var cell = Instantiate(_letterCellPrefab);
-                    cell.SetLetter(letter);
-                    row.AddLetterCell(cell);
-
                     cell.PlayAppearAnimation(baseDelay);
                     baseDelay += delayIncrement;
                 }
             }
+            
+        }
+
+        public void ClearPrevious()
+        {
+            foreach (var row in _rows)
+            {
+                row.ClearRow();
+            }
+        }
+
+        public void FillNextEmpty(string word)
+        {
+            foreach(var row in _rows)
+            {
+                if(row.IsEmpty)
+                {
+                    row.SetWord(word);
+                    return;
+                }
+            }
+        }
+        
+        public bool TrySetWord(string word)
+        {
+            foreach(var row in _rows)
+            {
+                if(row.IsEmpty && row.MatchesLength(word))
+                {
+                    row.SetWord(word);
+                    return true;
+                }
+            }
+
+            return false;
         }
         
     }

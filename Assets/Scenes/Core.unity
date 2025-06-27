@@ -239,8 +239,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87448718ae24fa44181f515326f791a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wordRowPrefab: {fileID: 7140395101700482285, guid: 73da9a8e3778b0c439cf5b829fac5b43, type: 3}
-  _letterCellPrefab: {fileID: 2239846234896715495, guid: b80c76070a250d6469cf3307119b5437, type: 3}
   _gridParent: {fileID: 686770738}
 --- !u!1 &777926317
 GameObject:
@@ -1110,6 +1108,9 @@ MonoBehaviour:
   _mainMenuView: {fileID: 1637541623}
   _canvasGroup: {fileID: 1537733760}
   _wordGridView: {fileID: 686770740}
+  _wordGridController: {fileID: 1727414161}
+  _rowPrefab: {fileID: 5006740632752584787, guid: 73da9a8e3778b0c439cf5b829fac5b43, type: 3}
+  _cellPrefab: {fileID: 7171164037117997724, guid: b80c76070a250d6469cf3307119b5437, type: 3}
 --- !u!225 &1537733760
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1185,6 +1186,51 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &1727414160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1727414162}
+  - component: {fileID: 1727414161}
+  m_Layer: 0
+  m_Name: WordGridController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1727414161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727414160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ec1da5c7120061438435bf321413c54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wordGridView: {fileID: 686770740}
+--- !u!4 &1727414162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727414160}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1409.7025, y: 1007.0891, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1743685866
 GameObject:
   m_ObjectHideFlags: 0
@@ -1620,3 +1666,4 @@ SceneRoots:
   - {fileID: 967836783}
   - {fileID: 1882921786}
   - {fileID: 172913553}
+  - {fileID: 1727414162}

@@ -29,7 +29,6 @@ namespace S.MapSystem.MVC
             { 
                 _levelView.SetData(evt.LevelData);
             }
-            //EventBusContainer.Global.Unsubscribe<TestLevelEvent>(OnTestLevelEvent);
         }
     }
 }

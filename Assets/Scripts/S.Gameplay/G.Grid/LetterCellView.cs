@@ -6,21 +6,28 @@ namespace S.Gameplay.G.Grid
 {
     public class LetterCellView : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI _letterText;
+        [SerializeField] private TMPro.TextMeshProUGUI _letterText;
         private CanvasGroup _canvasGroup;
         private RectTransform _rectTransform;
 
+        public string Letter => _letterText.text;
+        
         private void Awake()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
             _rectTransform = GetComponent<RectTransform>();
         }
-
-        public void SetLetter(char letter)
+        
+        public void SetLetter(char c)
         {
-            _letterText.text = letter.ToString();
+            _letterText.text = c.ToString();
         }
 
+        public void Clear()
+        {
+            _letterText.text = "";
+        }
+        
         public void PlayAppearAnimation(float delay = 0f)
         {
             _canvasGroup.alpha = 0;
