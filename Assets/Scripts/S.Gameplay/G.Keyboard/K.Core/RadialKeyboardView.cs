@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace S.Gameplay.G.Keyboard.K.Core
@@ -38,6 +39,31 @@ namespace S.Gameplay.G.Keyboard.K.Core
 
                 currentAngle += angleStep;
             }
+            
+            AnimateShow();
         }
+
+        private void AnimateShow()
+        {
+            var containerRect = GetComponent<RectTransform>();
+            containerRect.localScale = Vector3.zero;
+            containerRect.DOScale(1f, 0.3f).SetEase(Ease.OutBack);
+
+            var baseDelay = 0.1f;
+            var delayStep = 0.05f;
+
+            for(int i = 0; i < _spawnedButtons.Count; i++)
+            {
+                var btnRect = _spawnedButtons[i].GetRectTransform();
+                btnRect.localScale = Vector3.zero;
+
+                btnRect.DOScale(1f, 0.3f)
+                    .SetEase(Ease.OutBack)
+                    .SetDelay(baseDelay + i * delayStep);
+            }
+        }
+        
+        
+        
     }
 }
