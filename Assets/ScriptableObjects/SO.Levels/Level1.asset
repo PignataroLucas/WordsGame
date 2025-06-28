@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelId: 1
   wordList:
-  - cat
-  - acts
-  - cast
-  - cats
-  - scat
+  - STEAM
+  - MEAL
+  - STEM
+  - MATES
+  - LEAST
   backgroundImage: {fileID: 1111482923338573376, guid: 7e4f68b4c84498446958c3af3304b3df, type: 3}
   music: {fileID: 0}

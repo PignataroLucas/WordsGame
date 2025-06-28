@@ -55,6 +55,18 @@ namespace Tests
             }
         }
         
+        public void TrySubmitWordFromRadial(string word, List<Vector3> spawnPositions)
+        {
+            if(_validWords.Contains(word))
+            {
+                AnimateWordPlacement(word, spawnPositions);
+            }
+            else
+            {
+                Debug.Log($"❌ Wrong word from radial: {word}");
+            }
+        }
+        
         private void SubmitRandomWord()
         {
             if(_isCompleted)
@@ -120,6 +132,63 @@ namespace Tests
                         }
                     }
                 );
+                accumulatedDelay += delayPerLetter;
+            }
+        }
+        
+        private void AnimateWordPlacement(string word, List<Vector3> spawnPositions = null)
+        {
+            var targetRow = _wordGridView.GetRowForWord(word);
+
+            if (targetRow == null || !targetRow.IsEmpty)
+            {
+                Debug.LogWarning($"[WordGridController] Can't place the word: {word}: row occupied or non-existent.");
+                return;
+            }
+
+            var targetCells = targetRow.GetCells();
+
+            var delayPerLetter = 0.1f;
+            var accumulatedDelay = 0f;
+            var lettersCompleted = 0;
+            var wordLength = word.Length;
+
+            for (int i = 0; i < wordLength; i++)
+            {
+                var letter = word[i];
+                var targetCell = targetCells[i];
+
+                var flyingLetter = Instantiate(_flyingLetterPrefab, _flyingLettersLayer);
+                flyingLetter.Setup(letter);
+
+                Vector3 spawnPosition = _spawnPoint.position;
+                if(spawnPositions != null && i < spawnPositions.Count)
+                {
+                    spawnPosition = spawnPositions[i];
+                }
+
+                flyingLetter.transform.position = spawnPosition;
+
+                flyingLetter.AnimateToTarget(
+                    targetCell.GetWorldPosition(),
+                    accumulatedDelay,
+                    () =>
+                    {
+                        targetCell.RevealLetter(letter);
+                        lettersCompleted++;
+
+                        if(lettersCompleted == wordLength)
+                        {
+                            Debug.Log($"Word '{word}' fully placed!");
+
+                            targetRow.SetWord(word);
+                            _remainingWords.Remove(word);
+
+                            CheckIfUserHasCompletedTheGrid();
+                        }
+                    }
+                );
+
                 accumulatedDelay += delayPerLetter;
             }
         }

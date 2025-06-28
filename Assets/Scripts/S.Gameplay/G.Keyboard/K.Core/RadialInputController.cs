@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Tests;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -10,6 +11,7 @@ namespace S.Gameplay.G.Keyboard.K.Core
         [SerializeField] private RadialKeyboardView _keyboardView;
         [SerializeField] private RectTransform _lineSegmentsContainer;
         [SerializeField] private GameObject _lineSegmentPrefab;
+        [SerializeField] private WordGridController _wordGridController;
 
         private readonly List<LetterButtonView> _selectedLetters = new();
 
@@ -38,9 +40,7 @@ namespace S.Gameplay.G.Keyboard.K.Core
             {
                 string builtWord = BuildCurrentWord();
                 Debug.Log($"[RadialInputController] Formed word: {builtWord}");
-
-                // Validate and trigger Animation
-
+                
                 ClearSelection();
                 UpdateLineSegments();
 
@@ -109,7 +109,7 @@ namespace S.Gameplay.G.Keyboard.K.Core
             {
                 sb.Append(letter.GetLetter());
             }
-            return sb.ToString();
+            return sb.ToString().ToUpper();
         }
 
         private LetterButtonView GetLetterUnderPointer(PointerEventData eventData)
@@ -128,17 +128,25 @@ namespace S.Gameplay.G.Keyboard.K.Core
 
             return null;
          }
+        
 
         private void HandleGlobalPointerUp()
         {
             if(_selectedLetters.Count > 0)
             {
-                string builtWord = BuildCurrentWord();
-                Debug.Log($"[RadialInputController] GLOBAL POINTER UP → Formed word: {builtWord}");
+                var builtWord = BuildCurrentWord();
+                Debug.Log($"[RadialInputController] Final word formed: {builtWord}");
+
+                var spawnPositions = new List<Vector3>();
+                foreach(var letter in _selectedLetters)
+                {
+                    spawnPositions.Add(letter.GetRectTransform().position);
+                }
+
+                _wordGridController.TrySubmitWordFromRadial(builtWord, spawnPositions);
 
                 ClearSelection();
                 UpdateLineSegments();
-
             }
         }
 
