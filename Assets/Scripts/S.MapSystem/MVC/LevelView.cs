@@ -1,5 +1,6 @@
 using DG.Tweening;
 using S.Gameplay.G.Grid;
+using S.Gameplay.G.Keyboard.K.Core;
 using S.MainMenu.MM.MVC;
 using S.ScriptableObjects;
 using Tests;
@@ -17,6 +18,7 @@ namespace S.MapSystem.MVC
         [SerializeField] private WordGridController _wordGridController;
         [SerializeField] private GameObject _rowPrefab;
         [SerializeField] private GameObject _cellPrefab;
+        [SerializeField] private RadialKeyboardView _radialKeyboardView;
         
         public void SetData(LevelData evtLevelData)
         {
@@ -42,6 +44,8 @@ namespace S.MapSystem.MVC
                 rowPrefab: _rowPrefab,
                 cellPrefab: _cellPrefab
             );
+            
+            _radialKeyboardView.BuildKeyboard(evtLevelData.GetUniqueLetters());
             _mainMenuView.AnimateOut(AnimateLevelIn);
         }
         

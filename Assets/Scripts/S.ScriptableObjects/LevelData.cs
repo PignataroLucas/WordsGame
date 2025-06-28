@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace S.ScriptableObjects
@@ -15,5 +16,13 @@ namespace S.ScriptableObjects
         public List<string> WordList => wordList;
         public Sprite BackgroundImage => backgroundImage;
         public AudioClip Music => music;
+        
+        public List<char> GetUniqueLetters()
+        {
+            return wordList
+                .SelectMany(w => w.ToLower().ToCharArray())
+                .Distinct()
+                .ToList();
+        }
     }
 }
