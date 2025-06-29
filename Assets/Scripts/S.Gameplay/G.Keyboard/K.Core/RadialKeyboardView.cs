@@ -11,59 +11,100 @@ namespace S.Gameplay.G.Keyboard.K.Core
         [SerializeField] private float _radius = 200f;
         
         private List<LetterButtonView> _spawnedButtons = new();
+        private List<char> _currentLetters = new();
 
-        
         public void BuildKeyboard(List<char> letters)
+        {
+            _currentLetters = new List<char>(letters);
+
+            ClearButtons();
+
+            ArrangeLettersRadially(_currentLetters);
+        }
+
+        private void ClearButtons()
         {
             foreach (var btn in _spawnedButtons)
             {
                 Destroy(btn.gameObject);
             }
             _spawnedButtons.Clear();
+        }
 
-            var angleStep = 360f / letters.Count;
-            var currentAngle = 0f;
+        private void ArrangeLettersRadially(List<char> letters)
+        {
+            float angleStep = 360f / letters.Count;
+            float currentAngle = 0f;
 
-            for(var i = 0; i < letters.Count; i++)
+            foreach (var letter in letters)
             {
                 var letterObj = Instantiate(_letterButtonPrefab, _container);
-                letterObj.SetLetter(letters[i]);
+                letterObj.SetLetter(letter);
 
-                float rad = currentAngle * Mathf.Deg2Rad;
-                float x = _radius * Mathf.Cos(rad);
-                float y = _radius * Mathf.Sin(rad);
+                var rad = currentAngle * Mathf.Deg2Rad;
+                var x = _radius * Mathf.Cos(rad);
+                var y = _radius * Mathf.Sin(rad);
 
-                letterObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
+                letterObj.GetRectTransform().anchoredPosition = new Vector2(x, y);
 
                 _spawnedButtons.Add(letterObj);
 
                 currentAngle += angleStep;
             }
-            
-            AnimateShow();
         }
 
-        private void AnimateShow()
+        public void ShuffleLettersWithAnimation()
         {
-            var containerRect = GetComponent<RectTransform>();
-            containerRect.localScale = Vector3.zero;
-            containerRect.DOScale(1f, 0.3f).SetEase(Ease.OutBack);
+            ShuffleList(_currentLetters);
 
-            var baseDelay = 0.1f;
-            var delayStep = 0.05f;
+            var targetPositions = CalculateRadialPositions(_currentLetters.Count);
 
-            for(int i = 0; i < _spawnedButtons.Count; i++)
+            var animationDuration = 0.5f;
+            Ease easing = Ease.OutBack;
+
+            for(var i = 0; i < _spawnedButtons.Count; i++)
             {
-                var btnRect = _spawnedButtons[i].GetRectTransform();
-                btnRect.localScale = Vector3.zero;
+                var letterBtn = _spawnedButtons[i];
 
-                btnRect.DOScale(1f, 0.3f)
-                    .SetEase(Ease.OutBack)
-                    .SetDelay(baseDelay + i * delayStep);
+                letterBtn.SetLetter(_currentLetters[i]);
+
+                letterBtn.GetRectTransform()
+                    .DOAnchorPos(targetPositions[i], animationDuration)
+                    .SetEase(easing);
             }
         }
-        
-        
+
+        private List<Vector2> CalculateRadialPositions(int count)
+        {
+            var positions = new List<Vector2>();
+            var angleStep = 360f / count;
+            var currentAngle = 0f;
+
+            for (int i = 0; i < count; i++)
+            {
+                var rad = currentAngle * Mathf.Deg2Rad;
+                var x = _radius * Mathf.Cos(rad);
+                var y = _radius * Mathf.Sin(rad);
+
+                positions.Add(new Vector2(x, y));
+                currentAngle += angleStep;
+            }
+
+            return positions;
+        }
+
+        private void ShuffleList(List<char> list)
+        {
+            System.Random rng = new System.Random();
+            var n = list.Count;
+
+            while(n > 1)
+            {
+                n--;
+                var k = rng.Next(n + 1);
+                (list[n], list[k]) = (list[k], list[n]);
+            }
+        }
         
     }
 }
