@@ -21,7 +21,20 @@ namespace S.MapSystem.MVC
             {
                 eventBus.Subscribe<TestLevelEvent>(OnTestLevelEvent);
                 eventBus.Subscribe<LevelCompletedEvent>(OnLevelCompleted);
+                eventBus.Subscribe<ReturnToMenuEvent>(OnReturnToMenu);
             });
+        }
+
+        private void OnReturnToMenu(ReturnToMenuEvent obj)
+        {
+            if (_levelView != null)
+            {
+                _levelView.AnimateOutToMenu(() =>
+                {
+                    Debug.Log("[LevelController] Volviendo al menú!");
+                });
+            }
+            
         }
 
         private void OnLevelCompleted(LevelCompletedEvent obj)

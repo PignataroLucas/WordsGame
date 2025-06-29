@@ -21,9 +21,13 @@ namespace S.MainMenu.MM.MVC
 
         public void ResetView()
         {
-            _canvasGroup.alpha = 1;
-            _canvasGroup.interactable = true;
-            _canvasGroup.blocksRaycasts = true;
+            _canvasGroup.DOFade(1, 0.8f)
+                .SetEase(Ease.OutQuad)
+                .OnComplete(() =>
+                {
+                    _canvasGroup.interactable = true;
+                    _canvasGroup.blocksRaycasts = true;
+                });
         }
     }
 }

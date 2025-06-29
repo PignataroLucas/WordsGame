@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 
 namespace S.Gameplay.G.Grid
@@ -11,6 +12,11 @@ namespace S.Gameplay.G.Grid
         private readonly List<WordRowView> _rows = new();
         private readonly Dictionary<string, WordRowView> _wordToRowMap = new();
 
+        public List<WordRowView> GetAllRows()
+        {
+            return _rows;
+        }
+        
         public void BuildGrid(List<string> words, GameObject rowPrefab, GameObject cellPrefab)
         {
             foreach(Transform child in _gridParent)
@@ -108,6 +114,35 @@ namespace S.Gameplay.G.Grid
             }
 
             return false;
+        }
+        
+        public void PrepareForEntrance()
+        {
+            foreach(var row in _rows)
+            {
+                foreach(var cell in row.GetCells())
+                {
+                    cell.transform.localPosition = Vector3.zero;
+                    cell.GetCanvasGroup().alpha = 0;
+                }
+            }
+        }
+
+        public void AnimateEntrance()
+        {
+            float baseDelay = 0f;
+            float delayIncrement = 0.05f;
+
+            foreach (var row in _rows)
+            {
+                foreach (var cell in row.GetCells())
+                {
+                    cell.transform.DOLocalMoveY(0, 0.5f).From(-200).SetEase(Ease.OutBack).SetDelay(baseDelay);
+                    cell.GetCanvasGroup().DOFade(1, 0.5f).SetDelay(baseDelay);
+
+                    baseDelay += delayIncrement;
+                }
+            }
         }
         
     }

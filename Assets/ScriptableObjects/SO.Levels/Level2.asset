@@ -15,9 +15,11 @@ MonoBehaviour:
   levelId: 2
   wordList:
   - EAST
-  - SEAL
-  - MALT
   - LAST
+  - MALT
+  - SEAL
   - TEAL
+  - TEA
+  - METAL
   backgroundImage: {fileID: -9061837557117478321, guid: 83008fdf26d08a14f8d067bfd8b3a2fd, type: 3}
   music: {fileID: 0}

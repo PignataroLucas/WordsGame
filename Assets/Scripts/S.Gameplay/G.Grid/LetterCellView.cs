@@ -18,9 +18,16 @@ namespace S.Gameplay.G.Grid
             _rectTransform = GetComponent<RectTransform>();
         }
         
+        
+        
         public void SetLetter(char c)
         {
             _letterText.text = c.ToString();
+        }
+        
+        public CanvasGroup GetCanvasGroup()
+        {
+            return _canvasGroup;
         }
 
         public void Clear()
