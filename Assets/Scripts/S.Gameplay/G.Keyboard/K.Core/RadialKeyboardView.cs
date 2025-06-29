@@ -20,6 +20,7 @@ namespace S.Gameplay.G.Keyboard.K.Core
             ClearButtons();
 
             ArrangeLettersRadially(_currentLetters);
+            AnimateShow();
         }
 
         private void ClearButtons()
@@ -103,6 +104,26 @@ namespace S.Gameplay.G.Keyboard.K.Core
                 n--;
                 var k = rng.Next(n + 1);
                 (list[n], list[k]) = (list[k], list[n]);
+            }
+        }
+        
+        private void AnimateShow()
+        {
+            var containerRect = GetComponent<RectTransform>();
+            containerRect.localScale = Vector3.zero;
+            containerRect.DOScale(1f, 0.3f).SetEase(Ease.OutBack);
+
+            float baseDelay = 0.1f;
+            float delayStep = 0.05f;
+
+            for (int i = 0; i < _spawnedButtons.Count; i++)
+            {
+                var btnRect = _spawnedButtons[i].GetRectTransform();
+                btnRect.localScale = Vector3.zero;
+
+                btnRect.DOScale(1f, 0.3f)
+                    .SetEase(Ease.OutBack)
+                    .SetDelay(baseDelay + i * delayStep);
             }
         }
         
