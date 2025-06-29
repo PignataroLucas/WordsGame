@@ -3,6 +3,7 @@ using Tests;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace S.Gameplay.G.Keyboard.K.Core
 {
@@ -170,15 +171,28 @@ namespace S.Gameplay.G.Keyboard.K.Core
 
         private void PositionSegmentBetween(RectTransform segment, Vector3 start, Vector3 end)
         {
+            // Vector3 direction = end - start;
+            // float distance = direction.magnitude;
+            //
+            // segment.sizeDelta = new Vector2(distance, segment.sizeDelta.y);
+            // segment.pivot = new Vector2(0, 0.5f);
+            // segment.position = start;
+            //
+            // float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            // segment.rotation = Quaternion.Euler(0, 0, angle);
+            
             Vector3 direction = end - start;
             float distance = direction.magnitude;
+            Vector3 midpoint = (start + end) * 0.5f;
 
-            segment.sizeDelta = new Vector2(distance, segment.sizeDelta.y);
-            segment.pivot = new Vector2(0, 0.5f);
-            segment.position = start;
+            segment.position = midpoint;
 
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             segment.rotation = Quaternion.Euler(0, 0, angle);
+
+            var imageRect = segment.GetComponentInChildren<Image>().rectTransform;
+
+            imageRect.sizeDelta = new Vector2(distance, imageRect.sizeDelta.y);
         }
 
         private void ClearSelection()
