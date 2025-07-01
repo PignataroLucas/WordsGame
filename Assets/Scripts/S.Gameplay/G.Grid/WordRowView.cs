@@ -15,13 +15,14 @@ namespace S.Gameplay.G.Grid
         public bool IsCompleted { get; private set; }
 
 
-        public void Initialize(int letterCount, GameObject cellPrefab)
+        public void Initialize(int letterCount, GameObject cellPrefab, Color color)
         {
             for(int i = 0; i < letterCount; i++)
             {
                 var cellObj = Instantiate(cellPrefab, transform);
                 var cell = cellObj.GetComponent<LetterCellView>();
                 _cells.Add(cell);
+                cell.SetBackgroundColor(color);
             }
         }
 

@@ -263,6 +263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _letterText: {fileID: 6619186766563824841}
+  _backgroundImage: {fileID: 889647040783342978}
 --- !u!225 &9090500416769878417
 CanvasGroup:
   m_ObjectHideFlags: 0

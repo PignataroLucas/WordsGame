@@ -12,12 +12,15 @@ namespace S.ScriptableObjects
         [SerializeField] private Sprite backgroundImage;
         [SerializeField] private AudioClip music;
         [SerializeField] private int maxLeftColumnCapacity;
+        [SerializeField] private Color cellBackgroundColor = Color.white;
 
         public int LevelId => levelId;
         public List<string> WordList => wordList;
         public Sprite BackgroundImage => backgroundImage;
         public AudioClip Music => music;
         public int MaxLeftColumnCapacity => maxLeftColumnCapacity;
+        public Color CellBackgroundColor => cellBackgroundColor;
+
         
         public List<char> GetUniqueLetters()
         {

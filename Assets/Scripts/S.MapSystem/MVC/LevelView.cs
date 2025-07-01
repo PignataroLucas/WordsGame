@@ -66,8 +66,8 @@ namespace S.MapSystem.MVC
             _leftGridView.ClearGrid();
             _rightGridView.ClearGrid();
 
-            _leftGridView.BuildGrid(leftWords, _rowPrefab, _cellPrefab);
-            _rightGridView.BuildGrid(rightWords, _rowPrefab, _cellPrefab);
+            _leftGridView.BuildGrid(leftWords, _rowPrefab, _cellPrefab, evtLevelData.CellBackgroundColor);
+            _rightGridView.BuildGrid(rightWords, _rowPrefab, _cellPrefab, evtLevelData.CellBackgroundColor);
         }
 
         private void AnimateLevelIn()

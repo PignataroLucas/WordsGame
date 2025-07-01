@@ -17,7 +17,7 @@ namespace S.Gameplay.G.Grid
             return _rows;
         }
         
-        public void BuildGrid(List<string> words, GameObject rowPrefab, GameObject cellPrefab)
+        public void BuildGrid(List<string> words, GameObject rowPrefab, GameObject cellPrefab, Color color)
         {
             foreach(Transform child in _gridParent)
             { 
@@ -36,7 +36,7 @@ namespace S.Gameplay.G.Grid
             {
                 var rowObj = Instantiate(rowPrefab, _gridParent);
                 var row = rowObj.GetComponent<WordRowView>();
-                row.Initialize(word.Length, cellPrefab);
+                row.Initialize(word.Length, cellPrefab, color);
 
                 _rows.Add(row);
                 _wordToRowMap[word] = row;

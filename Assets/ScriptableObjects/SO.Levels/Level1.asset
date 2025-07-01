@@ -21,3 +21,5 @@ MonoBehaviour:
   - LEAST
   backgroundImage: {fileID: 1111482923338573376, guid: 7e4f68b4c84498446958c3af3304b3df, type: 3}
   music: {fileID: 0}
+  maxLeftColumnCapacity: 0
+  cellBackgroundColor: {r: 0.9056604, g: 0.80599385, b: 0.252047, a: 1}
