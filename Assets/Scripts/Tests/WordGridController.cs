@@ -15,6 +15,9 @@ namespace Tests
         [SerializeField] private FlyingLetterView _flyingLetterPrefab;
         [SerializeField] private RectTransform _spawnPoint;
         [SerializeField] private Transform _flyingLettersLayer;
+        [SerializeField] private WordGridView _leftGridView;
+        [SerializeField] private WordGridView _rightGridView;
+
         
         private List<string> _validWords;
         private List<string> _remainingWords;
@@ -138,7 +141,7 @@ namespace Tests
         
         private void AnimateWordPlacement(string word, List<Vector3> spawnPositions = null)
         {
-            var targetRow = _wordGridView.GetRowForWord(word);
+            var targetRow = FindTargetRowForWord(word);
 
             if (targetRow == null || !targetRow.IsEmpty)
             {
@@ -199,6 +202,24 @@ namespace Tests
             {
                 Services.WaitFor<IEventBus>(bus => { bus.Publish(new LevelCompletedEvent()); });
             }
+        }
+        
+        private WordRowView FindTargetRowForWord(string word)
+        {
+            var row = _leftGridView.GetRowForWord(word);
+            
+            if(row != null && row.IsEmpty)
+            {
+                return row;
+            }
+
+            row = _rightGridView.GetRowForWord(word);
+            if(row != null && row.IsEmpty)
+            {
+                return row;
+            }
+
+            return null;
         }
     }
 }

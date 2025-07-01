@@ -1676,6 +1676,8 @@ MonoBehaviour:
   _flyingLetterPrefab: {fileID: 977813588977569628, guid: 4f67e234f860d04469cc7a235bdea49a, type: 3}
   _spawnPoint: {fileID: 259098412}
   _flyingLettersLayer: {fileID: 1494053389}
+  _leftGridView: {fileID: 686770740}
+  _rightGridView: {fileID: 1537139823}
 --- !u!4 &1727414162
 Transform:
   m_ObjectHideFlags: 0
