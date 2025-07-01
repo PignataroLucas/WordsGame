@@ -116,7 +116,7 @@ namespace S.Gameplay.G.Keyboard.K.Core
             float baseDelay = 0.1f;
             float delayStep = 0.05f;
 
-            for (int i = 0; i < _spawnedButtons.Count; i++)
+            for(int i = 0; i < _spawnedButtons.Count; i++)
             {
                 var btnRect = _spawnedButtons[i].GetRectTransform();
                 btnRect.localScale = Vector3.zero;

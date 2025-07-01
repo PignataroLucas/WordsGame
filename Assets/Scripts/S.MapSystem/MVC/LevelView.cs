@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using S.Gameplay.G.Grid;
 using S.Gameplay.G.Keyboard.K.Core;
@@ -21,6 +23,8 @@ namespace S.MapSystem.MVC
         [SerializeField] private GameObject _cellPrefab;
         [SerializeField] private RadialKeyboardView _radialKeyboardView;
         [SerializeField] private GameObject _shuffleButton;
+        [SerializeField] private WordGridView _leftGridView;
+        [SerializeField] private WordGridView _rightGridView;
 
         public void SetData(LevelData evtLevelData)
         {
@@ -38,16 +42,34 @@ namespace S.MapSystem.MVC
             
             _wordGridController.SetLevelWords(evtLevelData.WordList);
 
-            _wordGridView.BuildGrid(
-                evtLevelData.WordList,
-                rowPrefab: _rowPrefab,
-                cellPrefab: _cellPrefab
-            );
-            
+            CreateDinamicGrid(evtLevelData);
+
             _radialKeyboardView.BuildKeyboard(evtLevelData.GetUniqueLetters());
+            AnimateShuffleButton();
             _mainMenuView.AnimateOut(AnimateLevelIn);
         }
-        
+
+        private void AnimateShuffleButton()
+        {
+            _shuffleButton.transform.localScale = Vector3.zero;
+            var duration = 0.3f;
+            _shuffleButton.transform.DOScale(1f, duration).SetEase(Ease.OutBack);
+        }
+
+        private void CreateDinamicGrid(LevelData evtLevelData)
+        {
+            var sortedWords = SortWords(evtLevelData.WordList);
+
+            var leftWords = sortedWords.Take(evtLevelData.MaxLeftColumnCapacity).ToList();
+            var rightWords = sortedWords.Skip(evtLevelData.MaxLeftColumnCapacity).ToList();
+
+            _leftGridView.ClearGrid();
+            _rightGridView.ClearGrid();
+
+            _leftGridView.BuildGrid(leftWords, _rowPrefab, _cellPrefab);
+            _rightGridView.BuildGrid(rightWords, _rowPrefab, _cellPrefab);
+        }
+
         private void AnimateLevelIn()
         {
             _canvasGroup.DOFade(1f, 0.8f)
@@ -90,13 +112,23 @@ namespace S.MapSystem.MVC
         private Sequence AnimateGridCellsOut()
         {
             var baseDelay = 0f;
-            var delayIncrement = 0.08f; // short effect
+            var delayIncrement = 0.08f;
             var fallDistance = -200f;
-            var duration = 0.3f; 
+            var duration = 0.3f;
 
             var seq = DOTween.Sequence();
 
-            foreach (var row in _wordGridView.GetAllRows())
+            foreach(var row in _leftGridView.GetAllRows())
+            {
+                foreach (var cell in row.GetCells())
+                {
+                    seq.Insert(baseDelay, cell.transform.DOLocalMoveY(fallDistance, duration).SetEase(Ease.InOutBack));
+                    seq.Insert(baseDelay, cell.GetCanvasGroup().DOFade(0, duration));
+                    baseDelay += delayIncrement;
+                }
+            }
+
+            foreach(var row in _rightGridView.GetAllRows())
             {
                 foreach (var cell in row.GetCells())
                 {
@@ -107,7 +139,6 @@ namespace S.MapSystem.MVC
             }
 
             return seq;
-            
         }
 
         private Sequence AnimateUIElementsOut()
@@ -120,7 +151,7 @@ namespace S.MapSystem.MVC
                 seq.Join(_radialKeyboardView.transform.DOScale(Vector3.zero, duration).SetEase(Ease.InBack));
             }
 
-            if (_shuffleButton != null)
+            if(_shuffleButton != null)
             {
                 seq.Join(_shuffleButton.transform.DOScale(Vector3.zero, duration).SetEase(Ease.InBack));
             }
@@ -136,6 +167,14 @@ namespace S.MapSystem.MVC
                 {
                     _canvasGroup.alpha = 1f; 
                 });
+        }
+        
+        private List<string> SortWords(List<string> words)
+        {
+            return words
+                .OrderBy(w => w.Length)
+                .ThenBy(w => w, StringComparer.Ordinal)
+                .ToList();
         }
     }
 }

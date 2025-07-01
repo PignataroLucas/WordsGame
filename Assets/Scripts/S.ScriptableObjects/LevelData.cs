@@ -11,11 +11,13 @@ namespace S.ScriptableObjects
         [SerializeField] private List<string> wordList;
         [SerializeField] private Sprite backgroundImage;
         [SerializeField] private AudioClip music;
+        [SerializeField] private int maxLeftColumnCapacity;
 
         public int LevelId => levelId;
         public List<string> WordList => wordList;
         public Sprite BackgroundImage => backgroundImage;
         public AudioClip Music => music;
+        public int MaxLeftColumnCapacity => maxLeftColumnCapacity;
         
         public List<char> GetUniqueLetters()
         {

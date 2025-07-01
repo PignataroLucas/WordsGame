@@ -145,5 +145,15 @@ namespace S.Gameplay.G.Grid
             }
         }
         
+        public void ClearGrid()
+        {
+            foreach (Transform child in _gridParent)
+            {
+                Destroy(child.gameObject);
+            }
+            _rows.Clear();
+            _wordToRowMap.Clear();
+        }
+        
     }
 }

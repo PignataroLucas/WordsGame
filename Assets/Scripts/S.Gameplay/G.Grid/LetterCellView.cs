@@ -19,7 +19,6 @@ namespace S.Gameplay.G.Grid
         }
         
         
-        
         public void SetLetter(char c)
         {
             _letterText.text = c.ToString();

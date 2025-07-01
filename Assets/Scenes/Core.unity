@@ -395,7 +395,7 @@ GameObject:
   - component: {fileID: 686770739}
   - component: {fileID: 686770740}
   m_Layer: 5
-  m_Name: WordGridView
+  m_Name: LeftGridView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -417,8 +417,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.71141434}
   m_AnchorMax: {x: 0.5, y: 0.71141434}
-  m_AnchoredPosition: {x: 0.38757, y: -17.5}
-  m_SizeDelta: {x: 1081.8, y: 99}
+  m_AnchoredPosition: {x: -270.26, y: -17.5}
+  m_SizeDelta: {x: 540.51, y: 99}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &686770739
 MonoBehaviour:
@@ -948,10 +948,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6699960480260557937, guid: 7703c632e498ad14a8b3671d66fdd9b5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 300382856}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7703c632e498ad14a8b3671d66fdd9b5, type: 3}
 --- !u!224 &1197519920 stripped
@@ -1000,6 +997,7 @@ RectTransform:
   m_Children:
   - {fileID: 974103983}
   - {fileID: 686770738}
+  - {fileID: 1537139822}
   - {fileID: 1494053389}
   - {fileID: 648902195}
   m_Father: {fileID: 1537733758}
@@ -1387,6 +1385,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 300382856}
   - {fileID: 1197519920}
   m_Father: {fileID: 1213865596}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1432,6 +1431,82 @@ RectTransform:
   m_AnchoredPosition: {x: 4.3476562, y: 2.487793}
   m_SizeDelta: {x: 2.550293, y: -0.4354248}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1537139821
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1537139822}
+  - component: {fileID: 1537139824}
+  - component: {fileID: 1537139823}
+  m_Layer: 5
+  m_Name: RightGridView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1537139822
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537139821}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1213865596}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.71141434}
+  m_AnchorMax: {x: 0.5, y: 0.71141434}
+  m_AnchoredPosition: {x: 278.59375, y: -17.5}
+  m_SizeDelta: {x: 540.51, y: 99}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1537139823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537139821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87448718ae24fa44181f515326f791a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gridParent: {fileID: 1537139822}
+--- !u!114 &1537139824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537139821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 12
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1537733757
 GameObject:
   m_ObjectHideFlags: 0
@@ -1491,6 +1566,8 @@ MonoBehaviour:
   _cellPrefab: {fileID: 7171164037117997724, guid: b80c76070a250d6469cf3307119b5437, type: 3}
   _radialKeyboardView: {fileID: 1197519925}
   _shuffleButton: {fileID: 117386200}
+  _leftGridView: {fileID: 686770740}
+  _rightGridView: {fileID: 1537139823}
 --- !u!225 &1537733760
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2047,7 +2124,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1197519920}
+    m_TransformParent: {fileID: 1494053389}
     m_Modifications:
     - target: {fileID: 2929253972104253978, guid: 779ab78e7d0bd34409a1b2d8054e3a8e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
