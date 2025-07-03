@@ -43,11 +43,7 @@ namespace S.MapSystem.MVC
         {
             Services.WaitFor<PopupService>(async popupService =>
             {
-                await popupService.ShowSequenceAsync(new List<string>
-                {
-                    "GenericPopup",
-                    "RewardPopup"
-                }, 1.1f);
+                await popupService.ShowPopupAsync("RewardPopup", obj.LevelData);
             });
             
         }

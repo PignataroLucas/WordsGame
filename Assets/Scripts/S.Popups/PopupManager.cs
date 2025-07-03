@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
+using S.ScriptableObjects;
 using UnityEngine;
 
 namespace S.Popups
@@ -13,6 +13,7 @@ namespace S.Popups
         public string LayerKey => layerKey;
         
         private CanvasGroup _canvasGroup;
+        protected LevelData _levelData;
 
         private void Awake()
         {
@@ -21,6 +22,11 @@ namespace S.Popups
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
             gameObject.SetActive(false);
+        }
+        
+        public virtual void Prepare(LevelData levelData)
+        {
+            _levelData = levelData;
         }
 
         public virtual async Task ShowAsync()
@@ -44,6 +50,11 @@ namespace S.Popups
             await _canvasGroup.DOFade(0f, fadeDuration).SetEase(Ease.InQuad).AsyncWaitForCompletion();
 
             gameObject.SetActive(false);
+        }
+
+        public virtual void SetPopupData(LevelData levelData)
+        {
+            Debug.Log($"Data : {levelData.LevelId}");
         }
     }
 }

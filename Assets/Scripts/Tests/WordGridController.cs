@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using S.Events.E.Transitions;
 using S.Gameplay.G.Grid;
 using S.Gameplay.G.Keyboard.K.Effects;
+using S.ScriptableObjects;
 using S.Utility.U.EventBus;
 using S.Utility.U.ServiceLocator;
 using UnityEngine;
@@ -21,43 +22,19 @@ namespace Tests
         
         private List<string> _validWords;
         private List<string> _remainingWords;
+        private LevelData _levelData;
 
         private const string _testWordInvalid = "dogs"; 
         
         private bool _isCompleted;
-        
-        public void SetLevelWords(List<string> wordList)
+
+        public void SetLevelWords(List<string> wordList, LevelData levelData)
         {
             _validWords = new List<string>(wordList);
             _remainingWords = new List<string>(wordList);
+            _levelData = levelData;
         }
 
-        private void Update()
-        {
-            if(Keyboard.current.aKey.wasPressedThisFrame)
-            {
-                SubmitRandomWord();
-            }
-
-            if(Keyboard.current.bKey.wasPressedThisFrame)
-            {
-                TrySubmitWord(_testWordInvalid);
-            }
-        }
-
-        private void TrySubmitWord(string word)
-        {
-            if(_validWords.Contains(word))
-            {
-                _wordGridView.ClearPrevious();     
-                AnimateWordPlacement(word);
-            }
-            else
-            {
-                Debug.Log($"❌ Wrong word : {word}");
-            }
-        }
-        
         public void TrySubmitWordFromRadial(string word, List<Vector3> spawnPositions)
         {
             if(_validWords.Contains(word))
@@ -69,76 +46,7 @@ namespace Tests
                 Debug.Log($"❌ Wrong word from radial: {word}");
             }
         }
-        
-        private void SubmitRandomWord()
-        {
-            if(_isCompleted)
-            {
-                return;
-            }
 
-            if(_remainingWords.Count == 0)
-            {
-                _isCompleted = true;
-                return;
-            }
-
-            int index = UnityEngine.Random.Range(0, _remainingWords.Count);
-            string randomWord = _remainingWords[index];
-
-            AnimateWordPlacement(randomWord);
-        }
-        
-        private void AnimateWordPlacement(string word)
-        {
-            var targetRow = _wordGridView.GetRowForWord(word);
-
-            if (targetRow == null || !targetRow.IsEmpty)
-            {
-                Debug.LogWarning($"[WordGridController] Cant place the word : {word}: row occupy or non-existent.");
-                return;
-            }
-
-            var targetCells = targetRow.GetCells();
-
-            var delayPerLetter = 0.1f;
-            var accumulatedDelay = 0f;
-            var lettersCompleted = 0;
-            var wordLength = word.Length;
-
-            for(int i = 0; i < wordLength; i++)
-            {
-                char letter = word[i];
-                var targetCell = targetCells[i];
-
-                var flyingLetter = Instantiate(_flyingLetterPrefab, _flyingLettersLayer);
-                flyingLetter.Setup(letter);
-                flyingLetter.transform.position = _spawnPoint.position;
-
-                flyingLetter.AnimateToTarget(
-                    targetCell.GetWorldPosition(),
-                    accumulatedDelay,
-                    () =>
-                    {
-                        targetCell.RevealLetter(letter);
-
-                        lettersCompleted++;
-
-                        if(lettersCompleted == wordLength)
-                        {
-                            Debug.Log($"Word '{word}' fully placed!");
-
-                            targetRow.SetWord(word);
-                            _remainingWords.Remove(word);
-                            
-                            CheckIfUserHasCompletedTheGrid();
-                        }
-                    }
-                );
-                accumulatedDelay += delayPerLetter;
-            }
-        }
-        
         private void AnimateWordPlacement(string word, List<Vector3> spawnPositions = null)
         {
             var targetRow = FindTargetRowForWord(word);
@@ -187,7 +95,7 @@ namespace Tests
                             targetRow.SetWord(word);
                             _remainingWords.Remove(word);
 
-                            CheckIfUserHasCompletedTheGrid();
+                            CheckIfUserHasCompletedTheGrid(_levelData);
                         }
                     }
                 );
@@ -196,11 +104,11 @@ namespace Tests
             }
         }
 
-        private void CheckIfUserHasCompletedTheGrid()
+        private void CheckIfUserHasCompletedTheGrid(LevelData levelData)
         {
             if(_remainingWords.Count == 0 && _wordGridView.IsGridComplete())
             {
-                Services.WaitFor<IEventBus>(bus => { bus.Publish(new LevelCompletedEvent()); });
+                Services.WaitFor<IEventBus>(bus => { bus.Publish(new LevelCompletedEvent(levelData)); });
             }
         }
         

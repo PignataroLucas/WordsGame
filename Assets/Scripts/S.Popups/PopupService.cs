@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using S.ScriptableObjects;
 using UnityEngine;
 
 namespace S.Popups
@@ -18,23 +19,26 @@ namespace S.Popups
             _defaultPopupLayer = defaultPopupLayer;
         }
 
-        public async Task ShowPopupAsync(string popupId)
+        public async Task ShowPopupAsync(string popupId, LevelData levelData)
         {
             var popup = await LoadAndInstantiatePopup(popupId);
             if(popup == null) return;
 
+            popup.Prepare(levelData);
             await popup.ShowAsync();
+            
         }
 
-        public async Task ShowSequenceAsync(List<string> popupIds, float delayBetween = 0f)
+        public async Task ShowSequenceAsync(List<string> popupIds, LevelData levelData, float delayBetween = 0f)
         {
             PopupManager currentPopup = null;
 
-            foreach (var id in popupIds)
+            foreach(var id in popupIds)
             {
                 currentPopup = await LoadAndInstantiatePopup(id);
                 if(currentPopup == null) continue;
 
+                currentPopup.Prepare(levelData);
                 await currentPopup.ShowAsync();
 
                 if(delayBetween > 0)
@@ -62,9 +66,9 @@ namespace S.Popups
 
             var popup = instance.GetComponent<PopupManager>();
 
-            string layerKey = popup.LayerKey;
+            var layerKey = popup.LayerKey;
 
-            if (!string.IsNullOrEmpty(layerKey) && _layerMap.TryGetValue(layerKey, out var targetLayer))
+            if(!string.IsNullOrEmpty(layerKey) && _layerMap.TryGetValue(layerKey, out var targetLayer))
             {
                 instance.transform.SetParent(targetLayer, false);
             }

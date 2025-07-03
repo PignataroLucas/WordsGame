@@ -40,7 +40,7 @@ namespace S.MapSystem.MVC
                 Debug.LogWarning($"[LevelView] Background image not found at path: {path}");
             }
             
-            _wordGridController.SetLevelWords(evtLevelData.WordList);
+            _wordGridController.SetLevelWords(evtLevelData.WordList, evtLevelData);
 
             CreateDinamicGrid(evtLevelData);
 
