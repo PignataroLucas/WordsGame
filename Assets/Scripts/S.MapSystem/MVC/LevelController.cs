@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using S.Events.E.Transitions;
+using S.Popups;
 using S.Utility.U.EventBus;
 using S.Utility.U.ServiceLocator;
 using UnityEngine;
@@ -39,7 +41,15 @@ namespace S.MapSystem.MVC
 
         private void OnLevelCompleted(LevelCompletedEvent obj)
         {
-            Debug.Log("[LevelController] Level Completed!!");
+            Services.WaitFor<PopupService>(async popupService =>
+            {
+                await popupService.ShowSequenceAsync(new List<string>
+                {
+                    "GenericPopup",
+                    "RewardPopup"
+                }, 1.1f);
+            });
+            
         }
 
         private void OnTestLevelEvent(TestLevelEvent evt)
