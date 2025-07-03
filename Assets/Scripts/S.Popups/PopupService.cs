@@ -8,10 +8,14 @@ namespace S.Popups
     {
         private readonly Transform _popupParent;
         private const string PopupPath = "R.Popups/";
+        
+        private readonly Dictionary<string, Transform> _layerMap;
+        private readonly Transform _defaultPopupLayer;
 
-        public PopupService(Transform popupParent)
+        public PopupService(Dictionary<string, Transform> layerMap, Transform defaultPopupLayer)
         {
-            _popupParent = popupParent;
+            _layerMap = layerMap;
+            _defaultPopupLayer = defaultPopupLayer;
         }
 
         public async Task ShowPopupAsync(string popupId)
@@ -55,7 +59,19 @@ namespace S.Popups
             }
 
             var instance = Object.Instantiate(prefab, _popupParent);
+
             var popup = instance.GetComponent<PopupManager>();
+
+            string layerKey = popup.LayerKey;
+
+            if (!string.IsNullOrEmpty(layerKey) && _layerMap.TryGetValue(layerKey, out var targetLayer))
+            {
+                instance.transform.SetParent(targetLayer, false);
+            }
+            else
+            {
+                instance.transform.SetParent(_defaultPopupLayer, false);
+            }
 
             if(popup == null)
             {

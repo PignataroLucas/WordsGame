@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeDuration: 0.4
+  layerKey: Reward
 --- !u!1 &6826376311032599184
 GameObject:
   m_ObjectHideFlags: 0

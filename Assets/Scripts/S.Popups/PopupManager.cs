@@ -9,7 +9,9 @@ namespace S.Popups
     public class PopupManager : MonoBehaviour
     {
         [SerializeField] private float fadeDuration = 0.4f;
-
+        [SerializeField] private string layerKey;
+        public string LayerKey => layerKey;
+        
         private CanvasGroup _canvasGroup;
 
         private void Awake()
