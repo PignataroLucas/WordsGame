@@ -12,12 +12,13 @@ namespace S.Popups
         public override void Prepare(LevelData levelData)
         {
             base.Prepare(levelData);
-            _text.text = $"LevelData : {levelData.LevelId}";
+            _text.text = $"CLAIM REWARD : {levelData.RewardCoinsAmount} COINS";
         }
 
-        public override async Task CloseAsync()
+        protected override async Task CloseAsync()
         {
             await base.CloseAsync();
+            //Agregar monedas al usuario
         }
     }
 }

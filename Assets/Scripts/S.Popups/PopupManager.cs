@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using DG.Tweening;
 using S.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace S.Popups
 {
@@ -10,10 +11,14 @@ namespace S.Popups
     {
         [SerializeField] private float fadeDuration = 0.4f;
         [SerializeField] private string layerKey;
+        [SerializeField] private Button _closeButton;
+        [SerializeField] private RectTransform _rectTransform;
+        
+        
         public string LayerKey => layerKey;
         
         private CanvasGroup _canvasGroup;
-        protected LevelData _levelData;
+        private LevelData _levelData;
 
         private void Awake()
         {
@@ -22,8 +27,12 @@ namespace S.Popups
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
             gameObject.SetActive(false);
+            if(_closeButton != null)
+            {
+              _closeButton.onClick.AddListener(OnCloseButtonPressed);  
+            }
         }
-        
+
         public virtual void Prepare(LevelData levelData)
         {
             _levelData = levelData;
@@ -42,19 +51,24 @@ namespace S.Popups
             _canvasGroup.blocksRaycasts = true;
         }
 
-        public virtual async Task CloseAsync()
+        private async void OnCloseButtonPressed()
+        {
+            await CloseAsync();
+        }
+
+        protected virtual async Task CloseAsync()
         {
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
+            var closeDuration = .4f;
 
-            await _canvasGroup.DOFade(0f, fadeDuration).SetEase(Ease.InQuad).AsyncWaitForCompletion();
+            await _rectTransform
+                .DOScale(Vector3.zero, closeDuration)
+                .SetEase(Ease.InBack)
+                .AsyncWaitForCompletion();
 
-            gameObject.SetActive(false);
+            GameObject.Destroy(gameObject);
         }
-
-        public virtual void SetPopupData(LevelData levelData)
-        {
-            Debug.Log($"Data : {levelData.LevelId}");
-        }
+        
     }
 }

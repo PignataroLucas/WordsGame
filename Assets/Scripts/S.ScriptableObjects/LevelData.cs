@@ -13,6 +13,7 @@ namespace S.ScriptableObjects
         [SerializeField] private AudioClip music;
         [SerializeField] private int maxLeftColumnCapacity;
         [SerializeField] private Color cellBackgroundColor = Color.white;
+        [SerializeField] private int rewardCoinsAmount;
 
         public int LevelId => levelId;
         public List<string> WordList => wordList;
@@ -20,7 +21,8 @@ namespace S.ScriptableObjects
         public AudioClip Music => music;
         public int MaxLeftColumnCapacity => maxLeftColumnCapacity;
         public Color CellBackgroundColor => cellBackgroundColor;
-
+        public int RewardCoinsAmount => rewardCoinsAmount;
+        
         
         public List<char> GetUniqueLetters()
         {

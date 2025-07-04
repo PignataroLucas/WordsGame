@@ -25,3 +25,4 @@ MonoBehaviour:
   music: {fileID: 0}
   maxLeftColumnCapacity: 4
   cellBackgroundColor: {r: 0.22745097, g: 0.73333335, b: 0.6773538, a: 1}
+  rewardCoinsAmount: 125
