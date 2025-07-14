@@ -37,13 +37,17 @@ namespace S.Gameplay.G.Keyboard.K.Core
         public void Highlight()
         {
             if (_highlightImage != null)
+            {
                 _highlightImage.enabled = true;
+            }
         }
 
         public void ClearHighlight()
         {
-            if (_highlightImage != null)
+            if(_highlightImage != null)
+            {
                 _highlightImage.enabled = false;
+            }
         }
     }
 }

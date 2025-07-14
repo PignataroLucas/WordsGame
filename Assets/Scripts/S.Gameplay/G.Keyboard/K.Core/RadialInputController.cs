@@ -15,7 +15,6 @@ namespace S.Gameplay.G.Keyboard.K.Core
         [SerializeField] private WordGridController _wordGridController;
 
         private readonly List<LetterButtonView> _selectedLetters = new();
-
         private readonly List<GameObject> _activeSegments = new();
 
         public void OnPointerDown(PointerEventData eventData)
@@ -88,12 +87,9 @@ namespace S.Gameplay.G.Keyboard.K.Core
                     return;
                 }
 
-                if(_selectedLetters.Contains(hitLetter))
-                {
-                    Debug.Log("[RadialInputController] Backtrack detected → Clearing!");
-                    ClearSelection();
-                    return;
-                }
+                var existingIndex = _selectedLetters.IndexOf(hitLetter);
+
+                if(HandleBacktrack(existingIndex)) return;
 
                 _selectedLetters.Add(hitLetter);
                 hitLetter.Highlight();
@@ -101,6 +97,31 @@ namespace S.Gameplay.G.Keyboard.K.Core
 
                 return; 
             }
+        }
+
+        private bool HandleBacktrack(int existingIndex)
+        {
+            if(existingIndex >= 0)
+            {
+                var removed = _selectedLetters.GetRange(existingIndex + 1, _selectedLetters.Count - existingIndex - 1);
+
+                _selectedLetters.RemoveRange(existingIndex + 1, _selectedLetters.Count - existingIndex - 1);
+
+                foreach(var letter in removed)
+                {
+                    letter.ClearHighlight();
+                }
+                
+                foreach(var letter in _selectedLetters)
+                {
+                    letter.Highlight();
+                }
+
+                UpdateLineSegments();
+                return true;
+            }
+
+            return false;
         }
 
         private string BuildCurrentWord()
